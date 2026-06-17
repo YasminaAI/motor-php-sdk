@@ -3,6 +3,7 @@
 namespace Yasminaai\Policies\Requests;
 
 use Yasminaai\Core\Json\JsonSerializableType;
+use DateTime;
 
 class GetPoliciesRequest extends JsonSerializableType
 {
@@ -57,6 +58,21 @@ class GetPoliciesRequest extends JsonSerializableType
     public ?int $perPage;
 
     /**
+     * @var ?DateTime $dateFrom Inclusive lower bound for the policy date. For issued policies (`status=1`), this filters by `uploaded_at` (the provider policy issue timestamp) and falls back to `created_at` when `uploaded_at` is unavailable. For other statuses, this filters by `created_at`.
+     */
+    public ?DateTime $dateFrom;
+
+    /**
+     * @var ?DateTime $dateTo Inclusive upper bound for the policy date. For issued policies (`status=1`), this filters by `uploaded_at` (the provider policy issue timestamp) and falls back to `created_at` when `uploaded_at` is unavailable. For other statuses, this filters by `created_at`.
+     */
+    public ?DateTime $dateTo;
+
+    /**
+     * @var ?bool $includeAggregates When true, includes policy totals, total price, and monthly buckets for the filtered result set.
+     */
+    public ?bool $includeAggregates;
+
+    /**
      * @param array{
      *   quoteRequestId?: ?int,
      *   quotePriceId?: ?string,
@@ -68,6 +84,9 @@ class GetPoliciesRequest extends JsonSerializableType
      *   minPrice?: ?float,
      *   maxPrice?: ?float,
      *   perPage?: ?int,
+     *   dateFrom?: ?DateTime,
+     *   dateTo?: ?DateTime,
+     *   includeAggregates?: ?bool,
      * } $values
      */
     public function __construct(
@@ -83,5 +102,8 @@ class GetPoliciesRequest extends JsonSerializableType
         $this->minPrice = $values['minPrice'] ?? null;
         $this->maxPrice = $values['maxPrice'] ?? null;
         $this->perPage = $values['perPage'] ?? null;
+        $this->dateFrom = $values['dateFrom'] ?? null;
+        $this->dateTo = $values['dateTo'] ?? null;
+        $this->includeAggregates = $values['includeAggregates'] ?? null;
     }
 }

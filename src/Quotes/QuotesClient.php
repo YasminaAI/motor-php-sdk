@@ -13,7 +13,9 @@ use Yasminaai\Core\Client\HttpMethod;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Yasminaai\Quotes\Types\DeleteQuoteRequestsIdResponse;
-use Yasminaai\Quotes\Types\GetQuoteRequestsResponse;
+use Yasminaai\Quotes\Requests\GetQuoteRequestsRequest;
+use Yasminaai\Types\PaginatedQuoteResponse;
+use Yasminaai\Core\Json\JsonSerializer;
 use Yasminaai\Quotes\Requests\PostQuoteRequestsRequest;
 
 class QuotesClient
@@ -72,7 +74,7 @@ class QuotesClient
         try {
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
-                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Sandbox->value,
                     path: "quote-requests/{$id}",
                     method: HttpMethod::GET,
                 ),
@@ -118,7 +120,7 @@ class QuotesClient
         try {
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
-                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Sandbox->value,
                     path: "quote-requests/{$id}",
                     method: HttpMethod::DELETE,
                 ),
@@ -145,6 +147,7 @@ class QuotesClient
     }
 
     /**
+     * @param GetQuoteRequestsRequest $request
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -153,19 +156,33 @@ class QuotesClient
      *   queryParameters?: array<string, mixed>,
      *   bodyProperties?: array<string, mixed>,
      * } $options
-     * @return ?GetQuoteRequestsResponse
+     * @return ?PaginatedQuoteResponse
      * @throws YasminaaiException
      * @throws YasminaaiApiException
      */
-    public function listQuotes(?array $options = null): ?GetQuoteRequestsResponse
+    public function listQuotes(GetQuoteRequestsRequest $request = new GetQuoteRequestsRequest(), ?array $options = null): ?PaginatedQuoteResponse
     {
         $options = array_merge($this->options, $options ?? []);
+        $query = [];
+        if ($request->dateFrom != null) {
+            $query['date_from'] = JsonSerializer::serializeDate($request->dateFrom);
+        }
+        if ($request->dateTo != null) {
+            $query['date_to'] = JsonSerializer::serializeDate($request->dateTo);
+        }
+        if ($request->perPage != null) {
+            $query['per_page'] = $request->perPage;
+        }
+        if ($request->includeAggregates != null) {
+            $query['include_aggregates'] = $request->includeAggregates;
+        }
         try {
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
-                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Sandbox->value,
                     path: "quote-requests",
                     method: HttpMethod::GET,
+                    query: $query,
                 ),
                 $options,
             );
@@ -175,7 +192,7 @@ class QuotesClient
                 if (empty($json)) {
                     return null;
                 }
-                return GetQuoteRequestsResponse::fromJson($json);
+                return PaginatedQuoteResponse::fromJson($json);
             }
         } catch (JsonException $e) {
             throw new YasminaaiException(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
@@ -209,12 +226,17 @@ class QuotesClient
     public function requestQuotes(PostQuoteRequestsRequest $request, ?array $options = null): ?QuoteResponse
     {
         $options = array_merge($this->options, $options ?? []);
+        $headers = [];
+        if ($request->acceptLanguage != null) {
+            $headers['Accept-Language'] = $request->acceptLanguage;
+        }
         try {
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
-                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Sandbox->value,
                     path: "quote-requests",
                     method: HttpMethod::POST,
+                    headers: $headers,
                     body: $request,
                 ),
                 $options,

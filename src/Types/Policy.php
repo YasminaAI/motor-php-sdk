@@ -5,6 +5,8 @@ namespace Yasminaai\Types;
 use Yasminaai\Core\Json\JsonSerializableType;
 use Yasminaai\Core\Json\JsonProperty;
 use Yasminaai\Core\Types\ArrayType;
+use DateTime;
+use Yasminaai\Core\Types\Date;
 
 class Policy extends JsonSerializableType
 {
@@ -69,6 +71,12 @@ class Policy extends JsonSerializableType
     public ?string $createdAt;
 
     /**
+     * @var ?DateTime $uploadedAt Timestamp when the provider policy document was attached. For issued motor policies this is the closest available issue/purchase timestamp.
+     */
+    #[JsonProperty('uploaded_at'), Date(Date::TYPE_DATETIME)]
+    public ?DateTime $uploadedAt;
+
+    /**
      * @var ?string $updatedAt
      */
     #[JsonProperty('updated_at')]
@@ -110,6 +118,7 @@ class Policy extends JsonSerializableType
      *   endDate?: ?string,
      *   isClaimed?: ?bool,
      *   createdAt?: ?string,
+     *   uploadedAt?: ?DateTime,
      *   updatedAt?: ?string,
      *   clientId?: ?string,
      *   canceledAt?: ?string,
@@ -130,6 +139,7 @@ class Policy extends JsonSerializableType
         $this->endDate = $values['endDate'] ?? null;
         $this->isClaimed = $values['isClaimed'] ?? null;
         $this->createdAt = $values['createdAt'] ?? null;
+        $this->uploadedAt = $values['uploadedAt'] ?? null;
         $this->updatedAt = $values['updatedAt'] ?? null;
         $this->clientId = $values['clientId'] ?? null;
         $this->canceledAt = $values['canceledAt'] ?? null;

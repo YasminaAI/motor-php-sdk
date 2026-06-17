@@ -3,6 +3,7 @@
 namespace Yasminaai\Quotes\Requests;
 
 use Yasminaai\Core\Json\JsonSerializableType;
+use Yasminaai\Quotes\Types\PostQuoteRequestsRequestAcceptLanguage;
 use Yasminaai\Core\Json\JsonProperty;
 use DateTime;
 use Yasminaai\Core\Types\Date;
@@ -11,6 +12,17 @@ use Yasminaai\Core\Types\ArrayType;
 
 class PostQuoteRequestsRequest extends JsonSerializableType
 {
+    /**
+     * @var ?value-of<PostQuoteRequestsRequestAcceptLanguage> $acceptLanguage Set to ar to receive Arabic-localized quote content.
+     */
+    public ?string $acceptLanguage;
+
+    /**
+     * @var string $otp The OTP received by the customer from the Request OTP API
+     */
+    #[JsonProperty('otp')]
+    public string $otp;
+
     /**
      * @var string $ownerId Owner ID must be 10 digits starting with 1, 2, or 7
      */
@@ -36,10 +48,16 @@ class PostQuoteRequestsRequest extends JsonSerializableType
     public DateTime $birthdate;
 
     /**
-     * @var string $carSequenceNumber Car sequence number must be 8 or 9 digits
+     * @var ?string $carSequenceNumber Car sequence number must be 8 or 9 digits
      */
     #[JsonProperty('car_sequence_number')]
-    public string $carSequenceNumber;
+    public ?string $carSequenceNumber;
+
+    /**
+     * @var ?string $customNumber Custom car number between 1000000 and 9999999999 (for newly imported cars)
+     */
+    #[JsonProperty('custom_number')]
+    public ?string $customNumber;
 
     /**
      * @var ?bool $isOwnershipTransfer Indicates if the ownership is being transferred
@@ -79,12 +97,15 @@ class PostQuoteRequestsRequest extends JsonSerializableType
 
     /**
      * @param array{
+     *   otp: string,
      *   ownerId: string,
      *   phone: string,
      *   birthdate: DateTime,
-     *   carSequenceNumber: string,
      *   carEstimatedCost: float,
+     *   acceptLanguage?: ?value-of<PostQuoteRequestsRequestAcceptLanguage>,
      *   email?: ?string,
+     *   carSequenceNumber?: ?string,
+     *   customNumber?: ?string,
      *   isOwnershipTransfer?: ?bool,
      *   currentCarOwnerId?: ?string,
      *   carModelYear?: ?int,
@@ -95,11 +116,14 @@ class PostQuoteRequestsRequest extends JsonSerializableType
     public function __construct(
         array $values,
     ) {
+        $this->acceptLanguage = $values['acceptLanguage'] ?? null;
+        $this->otp = $values['otp'];
         $this->ownerId = $values['ownerId'];
         $this->email = $values['email'] ?? null;
         $this->phone = $values['phone'];
         $this->birthdate = $values['birthdate'];
-        $this->carSequenceNumber = $values['carSequenceNumber'];
+        $this->carSequenceNumber = $values['carSequenceNumber'] ?? null;
+        $this->customNumber = $values['customNumber'] ?? null;
         $this->isOwnershipTransfer = $values['isOwnershipTransfer'] ?? null;
         $this->currentCarOwnerId = $values['currentCarOwnerId'] ?? null;
         $this->carEstimatedCost = $values['carEstimatedCost'];

@@ -35,6 +35,12 @@ class QuoteResponse extends JsonSerializableType
     public ?int $carSequenceNumber;
 
     /**
+     * @var ?string $customNumber Custom car number for newly imported cars (present when `custom_number` was used in the request)
+     */
+    #[JsonProperty('custom_number')]
+    public ?string $customNumber;
+
+    /**
      * @var ?bool $isOwnershipTransfer Whether it was a car transfer or not
      */
     #[JsonProperty('is_ownership_transfer')]
@@ -100,6 +106,7 @@ class QuoteResponse extends JsonSerializableType
      *   phone?: ?string,
      *   birthdate?: ?DateTime,
      *   carSequenceNumber?: ?int,
+     *   customNumber?: ?string,
      *   isOwnershipTransfer?: ?bool,
      *   carEstimatedCost?: ?float,
      *   carModelYear?: ?int,
@@ -119,6 +126,7 @@ class QuoteResponse extends JsonSerializableType
         $this->phone = $values['phone'] ?? null;
         $this->birthdate = $values['birthdate'] ?? null;
         $this->carSequenceNumber = $values['carSequenceNumber'] ?? null;
+        $this->customNumber = $values['customNumber'] ?? null;
         $this->isOwnershipTransfer = $values['isOwnershipTransfer'] ?? null;
         $this->carEstimatedCost = $values['carEstimatedCost'] ?? null;
         $this->carModelYear = $values['carModelYear'] ?? null;

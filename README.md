@@ -46,10 +46,10 @@ $client = new YasminaaiClient(
 );
 $client->quotes->requestQuotes(
     new PostQuoteRequestsRequest([
+        'otp' => '123456',
         'ownerId' => 'owner_id',
         'phone' => 'phone',
         'birthdate' => new DateTime('2023-01-15'),
-        'carSequenceNumber' => 'car_sequence_number',
         'carEstimatedCost' => 1.1,
     ]),
 );
@@ -61,7 +61,7 @@ $client->quotes->requestQuotes(
 This SDK allows you to configure different environments for API requests.
 
 ```php
-The SDK defaults to the `Default_` environment. To use a different environment, pass it to the client constructor:
+The SDK defaults to the `Sandbox` environment. To use a different environment, pass it to the client constructor:
 
 ```php
 use Yasminaai\YasminaaiClient;
@@ -76,7 +76,8 @@ $client = new YasminaaiClient(
 ```
 
 Available environments:
-- `Environments::Default_`
+- `Environments::Sandbox`
+- `Environments::Production`
 ```
 
 ## Exception Handling

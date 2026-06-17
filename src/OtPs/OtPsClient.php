@@ -70,7 +70,7 @@ class OtPsClient
         try {
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
-                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Sandbox->value,
                     path: "quote-otp",
                     method: HttpMethod::POST,
                     body: $request,
@@ -112,7 +112,7 @@ class OtPsClient
         try {
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
-                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Sandbox->value,
                     path: "issue-otp",
                     method: HttpMethod::POST,
                     body: $request,

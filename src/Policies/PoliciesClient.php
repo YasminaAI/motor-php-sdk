@@ -13,7 +13,8 @@ use Yasminaai\Core\Client\HttpMethod;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Yasminaai\Policies\Requests\GetPoliciesRequest;
-use Yasminaai\Core\Json\JsonDecoder;
+use Yasminaai\Types\PaginatedPolicyResponse;
+use Yasminaai\Core\Json\JsonSerializer;
 use Yasminaai\Policies\Requests\PostPoliciesRequest;
 
 class PoliciesClient
@@ -74,7 +75,7 @@ class PoliciesClient
         try {
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
-                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Sandbox->value,
                     path: "policies/{$carPolicy}",
                     method: HttpMethod::GET,
                 ),
@@ -112,11 +113,11 @@ class PoliciesClient
      *   queryParameters?: array<string, mixed>,
      *   bodyProperties?: array<string, mixed>,
      * } $options
-     * @return ?array<Policy>
+     * @return ?PaginatedPolicyResponse
      * @throws YasminaaiException
      * @throws YasminaaiApiException
      */
-    public function listPolicies(GetPoliciesRequest $request = new GetPoliciesRequest(), ?array $options = null): ?array
+    public function listPolicies(GetPoliciesRequest $request = new GetPoliciesRequest(), ?array $options = null): ?PaginatedPolicyResponse
     {
         $options = array_merge($this->options, $options ?? []);
         $query = [];
@@ -150,10 +151,19 @@ class PoliciesClient
         if ($request->perPage != null) {
             $query['per_page'] = $request->perPage;
         }
+        if ($request->dateFrom != null) {
+            $query['date_from'] = JsonSerializer::serializeDate($request->dateFrom);
+        }
+        if ($request->dateTo != null) {
+            $query['date_to'] = JsonSerializer::serializeDate($request->dateTo);
+        }
+        if ($request->includeAggregates != null) {
+            $query['include_aggregates'] = $request->includeAggregates;
+        }
         try {
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
-                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Sandbox->value,
                     path: "policies",
                     method: HttpMethod::GET,
                     query: $query,
@@ -166,7 +176,7 @@ class PoliciesClient
                 if (empty($json)) {
                     return null;
                 }
-                return JsonDecoder::decodeArray($json, [Policy::class]); // @phpstan-ignore-line
+                return PaginatedPolicyResponse::fromJson($json);
             }
         } catch (JsonException $e) {
             throw new YasminaaiException(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
@@ -202,7 +212,7 @@ class PoliciesClient
         try {
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
-                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Sandbox->value,
                     path: "policies",
                     method: HttpMethod::POST,
                     body: $request,

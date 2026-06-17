@@ -9,6 +9,12 @@ use Yasminaai\Core\Types\ArrayType;
 class PostPoliciesRequest extends JsonSerializableType
 {
     /**
+     * @var string $otp The OTP received by the customer from the Issue OTP API
+     */
+    #[JsonProperty('otp')]
+    public string $otp;
+
+    /**
      * @var int $quoteRequestId ID of the car quote request
      */
     #[JsonProperty('quote_request_id')]
@@ -40,6 +46,7 @@ class PostPoliciesRequest extends JsonSerializableType
 
     /**
      * @param array{
+     *   otp: string,
      *   quoteRequestId: int,
      *   quoteReferenceId: string,
      *   quotePriceId: string,
@@ -50,6 +57,7 @@ class PostPoliciesRequest extends JsonSerializableType
     public function __construct(
         array $values,
     ) {
+        $this->otp = $values['otp'];
         $this->quoteRequestId = $values['quoteRequestId'];
         $this->quoteReferenceId = $values['quoteReferenceId'];
         $this->quotePriceId = $values['quotePriceId'];

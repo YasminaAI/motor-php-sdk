@@ -26,6 +26,12 @@ class Benefit extends JsonSerializableType
     public ?string $name;
 
     /**
+     * @var ?string $nameAr Arabic name of the benefit. Use this field instead of `name` when rendering Arabic UIs.
+     */
+    #[JsonProperty('name_ar')]
+    public ?string $nameAr;
+
+    /**
      * @var ?float $amount
      */
     #[JsonProperty('amount')]
@@ -48,6 +54,7 @@ class Benefit extends JsonSerializableType
      *   quoteBenefitId?: ?string,
      *   id?: ?string,
      *   name?: ?string,
+     *   nameAr?: ?string,
      *   amount?: ?float,
      *   vat?: ?float,
      *   url?: ?string,
@@ -59,6 +66,7 @@ class Benefit extends JsonSerializableType
         $this->quoteBenefitId = $values['quoteBenefitId'] ?? null;
         $this->id = $values['id'] ?? null;
         $this->name = $values['name'] ?? null;
+        $this->nameAr = $values['nameAr'] ?? null;
         $this->amount = $values['amount'] ?? null;
         $this->vat = $values['vat'] ?? null;
         $this->url = $values['url'] ?? null;
