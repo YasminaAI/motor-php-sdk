@@ -59,8 +59,8 @@ class YasminaaiClient
             'Authorization' => "Bearer $token",
             'X-Fern-Language' => 'PHP',
             'X-Fern-SDK-Name' => 'Yasminaai',
-            'X-Fern-SDK-Version' => '0.0.29',
-            'User-Agent' => 'yasminaai/yasminaai/0.0.29',
+            'X-Fern-SDK-Version' => '0.0.32',
+            'User-Agent' => 'yasminaai/yasminaai/0.0.32',
         ];
 
         $this->options = $options ?? [];
