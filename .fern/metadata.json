@@ -2,10 +2,10 @@
   "cliVersion": "5.49.0",
   "generatorName": "fernapi/fern-php-sdk",
   "generatorVersion": "2.10.11",
-  "originGitCommit": "012ac56eeca66305dab6ff080ac211853e80bf93",
+  "originGitCommit": "8ca8de8b2e9f0ebd9fba8a9dcf35826ab0911bf0",
   "originGitCommitIsDirty": false,
   "invokedBy": "manual",
-  "requestedVersion": null,
+  "requestedVersion": "0.0.5",
   "ciProvider": null,
-  "sdkVersion": "0.0.25"
+  "sdkVersion": "0.0.5"
 }
