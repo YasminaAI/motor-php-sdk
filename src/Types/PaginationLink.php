@@ -1,11 +1,11 @@
 <?php
 
-namespace Yasminaai\Quotes\Types;
+namespace Yasminaai\Types;
 
 use Yasminaai\Core\Json\JsonSerializableType;
 use Yasminaai\Core\Json\JsonProperty;
 
-class GetQuoteRequestsResponseLinksItem extends JsonSerializableType
+class PaginationLink extends JsonSerializableType
 {
     /**
      * @var ?string $url

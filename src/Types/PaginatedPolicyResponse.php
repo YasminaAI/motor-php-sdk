@@ -1,13 +1,12 @@
 <?php
 
-namespace Yasminaai\Quotes\Types;
+namespace Yasminaai\Types;
 
 use Yasminaai\Core\Json\JsonSerializableType;
 use Yasminaai\Core\Json\JsonProperty;
-use Yasminaai\Types\QuoteResponse;
 use Yasminaai\Core\Types\ArrayType;
 
-class GetQuoteRequestsResponse extends JsonSerializableType
+class PaginatedPolicyResponse extends JsonSerializableType
 {
     /**
      * @var ?int $currentPage
@@ -16,9 +15,9 @@ class GetQuoteRequestsResponse extends JsonSerializableType
     public ?int $currentPage;
 
     /**
-     * @var ?array<QuoteResponse> $data
+     * @var ?array<Policy> $data
      */
-    #[JsonProperty('data'), ArrayType([QuoteResponse::class])]
+    #[JsonProperty('data'), ArrayType([Policy::class])]
     public ?array $data;
 
     /**
@@ -46,9 +45,9 @@ class GetQuoteRequestsResponse extends JsonSerializableType
     public ?string $lastPageUrl;
 
     /**
-     * @var ?array<GetQuoteRequestsResponseLinksItem> $links
+     * @var ?array<PaginationLink> $links
      */
-    #[JsonProperty('links'), ArrayType([GetQuoteRequestsResponseLinksItem::class])]
+    #[JsonProperty('links'), ArrayType([PaginationLink::class])]
     public ?array $links;
 
     /**
@@ -88,20 +87,27 @@ class GetQuoteRequestsResponse extends JsonSerializableType
     public ?int $total;
 
     /**
+     * @var ?PolicyAggregates $aggregates
+     */
+    #[JsonProperty('aggregates')]
+    public ?PolicyAggregates $aggregates;
+
+    /**
      * @param array{
      *   currentPage?: ?int,
-     *   data?: ?array<QuoteResponse>,
+     *   data?: ?array<Policy>,
      *   firstPageUrl?: ?string,
      *   from?: ?int,
      *   lastPage?: ?int,
      *   lastPageUrl?: ?string,
-     *   links?: ?array<GetQuoteRequestsResponseLinksItem>,
+     *   links?: ?array<PaginationLink>,
      *   nextPageUrl?: ?string,
      *   path?: ?string,
      *   perPage?: ?int,
      *   prevPageUrl?: ?string,
      *   to?: ?int,
      *   total?: ?int,
+     *   aggregates?: ?PolicyAggregates,
      * } $values
      */
     public function __construct(
@@ -120,6 +126,7 @@ class GetQuoteRequestsResponse extends JsonSerializableType
         $this->prevPageUrl = $values['prevPageUrl'] ?? null;
         $this->to = $values['to'] ?? null;
         $this->total = $values['total'] ?? null;
+        $this->aggregates = $values['aggregates'] ?? null;
     }
 
     /**

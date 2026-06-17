@@ -84,7 +84,7 @@ $client->quotes->deleteQuote(
 </dl>
 </details>
 
-<details><summary><code>$client-&gt;quotes-&gt;listQuotes() -> ?GetQuoteRequestsResponse</code></summary>
+<details><summary><code>$client-&gt;quotes-&gt;listQuotes($request) -> ?PaginatedQuoteResponse</code></summary>
 <dl>
 <dd>
 
@@ -97,8 +97,54 @@ $client->quotes->deleteQuote(
 <dd>
 
 ```php
-$client->quotes->listQuotes();
+$client->quotes->listQuotes(
+    new GetQuoteRequestsRequest([
+        'dateFrom' => new DateTime('2026-06-01'),
+        'dateTo' => new DateTime('2026-06-30'),
+        'perPage' => 10,
+        'includeAggregates' => true,
+    ]),
+);
 ```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$dateFrom:** `?DateTime` — Inclusive lower bound for quote request creation date.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$dateTo:** `?DateTime` — Inclusive upper bound for quote request creation date.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$perPage:** `?int` — Number of quote requests to return per page.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeAggregates:** `?bool` — When true, includes quote request totals and monthly buckets for the filtered result set.
+    
 </dd>
 </dl>
 </dd>
@@ -139,10 +185,10 @@ The Quote IDs can be used later to issue a policy
 ```php
 $client->quotes->requestQuotes(
     new PostQuoteRequestsRequest([
+        'otp' => '123456',
         'ownerId' => 'owner_id',
         'phone' => 'phone',
         'birthdate' => new DateTime('2023-01-15'),
-        'carSequenceNumber' => 'car_sequence_number',
         'carEstimatedCost' => 1.1,
     ]),
 );
@@ -156,6 +202,22 @@ $client->quotes->requestQuotes(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**$acceptLanguage:** `?string` — Set to ar to receive Arabic-localized quote content.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$otp:** `string` — The OTP received by the customer from the Request OTP API
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -192,7 +254,15 @@ $client->quotes->requestQuotes(
 <dl>
 <dd>
 
-**$carSequenceNumber:** `string` — Car sequence number must be 8 or 9 digits
+**$carSequenceNumber:** `?string` — Car sequence number must be 8 or 9 digits
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customNumber:** `?string` — Custom car number between 1000000 and 9999999999 (for newly imported cars)
     
 </dd>
 </dl>
@@ -309,7 +379,7 @@ $client->policies->showPolicy(
 </dl>
 </details>
 
-<details><summary><code>$client-&gt;policies-&gt;listPolicies($request) -> ?array</code></summary>
+<details><summary><code>$client-&gt;policies-&gt;listPolicies($request) -> ?PaginatedPolicyResponse</code></summary>
 <dl>
 <dd>
 
@@ -337,7 +407,11 @@ Listing requested policies
 
 ```php
 $client->policies->listPolicies(
-    new GetPoliciesRequest([]),
+    new GetPoliciesRequest([
+        'dateFrom' => new DateTime('2026-06-01'),
+        'dateTo' => new DateTime('2026-06-30'),
+        'includeAggregates' => true,
+    ]),
 );
 ```
 </dd>
@@ -429,6 +503,30 @@ $client->policies->listPolicies(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**$dateFrom:** `?DateTime` — Inclusive lower bound for the policy date. For issued policies (`status=1`), this filters by `uploaded_at` (the provider policy issue timestamp) and falls back to `created_at` when `uploaded_at` is unavailable. For other statuses, this filters by `created_at`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$dateTo:** `?DateTime` — Inclusive upper bound for the policy date. For issued policies (`status=1`), this filters by `uploaded_at` (the provider policy issue timestamp) and falls back to `created_at` when `uploaded_at` is unavailable. For other statuses, this filters by `created_at`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeAggregates:** `?bool` — When true, includes policy totals, total price, and monthly buckets for the filtered result set.
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -466,6 +564,7 @@ For issuing a new policy
 ```php
 $client->policies->issuePolicy(
     new PostPoliciesRequest([
+        'otp' => '123456',
         'quoteRequestId' => 123,
         'quoteReferenceId' => '550e8400-e29b-41d4-a716-446655440000',
         'quotePriceId' => '550e8400-e29b-41d4-a716-446655440001',
@@ -481,6 +580,14 @@ $client->policies->issuePolicy(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**$otp:** `string` — The OTP received by the customer from the Issue OTP API
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
